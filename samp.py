@@ -30,7 +30,9 @@ SignupForm="""
 name="myForm" novalidate>
 Add Details
       <table>
-      <tr><td>First Name:</td><td><input type='text' name="firstname" ng-model="user" required></td></tr>
+      <tr>
+      <td>Photgraph: <input type="file" name="img"/></td>
+      <td>First Name:</td><td><input type='text' name="firstname" ng-model="user" required></td></tr>
       <span style="color:red" ng-show="myForm.user.$dirty && myForm.user.$invalid">
 <span ng-show="myForm.user.$error.required">First Name is required.</span>
 </span>
@@ -92,6 +94,7 @@ app.controller('validateCtrl', function($scope) {
 """
 
 class LoginDB(ndb.Model):
+    photo = ndb.BlobProperty()
     first_name=ndb.StringProperty()
     last_name=ndb.StringProperty()
     user_addr=ndb.StringProperty()
@@ -143,7 +146,7 @@ class SignupHandler(webapp2.RequestHandler):
         login_details=LoginDB(first_name=self.request.get('firstname'),
                               last_name=self.request.get('lastname'),
                               user_addr=self.request.get('address'),
-                              
+                              photo = self.request.get('img')
                               user_obj=self.request.get('objective'),
                               user_city=self.request.get('city'),
                               user_state=self.request.get('state'),
@@ -253,6 +256,7 @@ class LoginHandler(webapp2.RequestHandler):
         else:
             
             for i in x:
+                ph=i.photo
                 y=i.user_pwd
                 a=i.first_name
                 b=i.last_name
